@@ -14,9 +14,9 @@ Node.js/TypeScript backend API for the Trading App - an intelligent financial in
 ## Prerequisites
 
 - Node.js 18+ and npm
-- Docker and Docker Compose
-- PostgreSQL (via Docker)
-- Redis (via Docker)
+- Python 3.8+ (for crawlers)
+- Docker and Docker Compose (for Redis)
+- Supabase account (for PostgreSQL database)
 
 ## Getting Started
 
@@ -26,30 +26,46 @@ Node.js/TypeScript backend API for the Trading App - an intelligent financial in
 npm install
 ```
 
-### 2. Start Database Services
+### 2. Set Up Database (Supabase)
 
-Start PostgreSQL and Redis using Docker Compose:
+1. Create a Supabase account at https://supabase.com
+2. Create a new project
+3. Get your database connection string from Project Settings > Database
+4. The connection string format is:
+   ```
+   postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres
+   ```
+
+### 3. Start Redis
+
+Start Redis using Docker Compose:
 
 ```bash
 # From the project root
-docker-compose up -d
+docker-compose up -d redis
 ```
 
-This will start:
-- PostgreSQL on `localhost:5432`
-- Redis on `localhost:6379`
+This will start Redis on `localhost:6379`
 
-### 3. Environment Variables
+### 4. Environment Variables
 
-Copy `.env.example` to `.env` (already done):
+Update `.env` with your Supabase credentials:
 
 ```bash
-cp .env.example .env
+DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@db.YOUR_PROJECT_REF.supabase.co:5432/postgres"
 ```
 
-The default configuration works with the Docker Compose setup.
+Make sure Redis settings are correct (default values should work).
 
-### 4. Database Setup
+### 5. Install Python Dependencies
+
+Install required Python packages for the crawler:
+
+```bash
+pip3 install --user feedparser crawl4ai beautifulsoup4 html2text
+```
+
+### 6. Database Setup
 
 Generate Prisma Client:
 
@@ -63,7 +79,7 @@ Run database migrations:
 npm run prisma:migrate
 ```
 
-### 5. Start Development Server
+### 7. Start Development Server
 
 ```bash
 npm run dev
@@ -113,6 +129,12 @@ backend/
 - `GET /api/v1/sources/:id` - Get single source by ID
 - `POST /api/v1/sources` - Create new source (admin only)
 
+### Crawler
+- `POST /api/v1/crawler/fxstreet-news` - Trigger FXStreet news crawler
+  - Body: `{ "maxArticles": 10 }` (optional, default: 10, max: 100)
+  - Returns: Job ID for tracking
+- `GET /api/v1/crawler/jobs/:jobId` - Get crawler job status and results
+
 ## Database Schema
 
 The database includes the following models:
@@ -136,6 +158,51 @@ View and edit data using Prisma Studio:
 npm run prisma:studio
 ```
 
+### Using the Crawler
+
+#### Trigger FXStreet News Crawler
+
+```bash
+# Crawl 10 articles (default)
+curl -X POST http://localhost:3001/api/v1/crawler/fxstreet-news \
+  -H "Content-Type: application/json" \
+  -d '{"maxArticles": 10}'
+
+# Response:
+# {
+#   "success": true,
+#   "message": "Crawler job initiated",
+#   "data": {
+#     "jobId": "123",
+#     "source": "fxstreet",
+#     "maxArticles": 10,
+#     "status": "queued"
+#   }
+# }
+```
+
+#### Check Job Status
+
+```bash
+curl http://localhost:3001/api/v1/crawler/jobs/123
+
+# Response:
+# {
+#   "success": true,
+#   "data": {
+#     "jobId": "123",
+#     "state": "completed",
+#     "progress": 100,
+#     "result": {
+#       "success": true,
+#       "source": "fxstreet",
+#       "scraped": 10,
+#       "saved": 8
+#     }
+#   }
+# }
+```
+
 ### Logs
 
 Logs are stored in the `logs/` directory:
@@ -145,18 +212,17 @@ Logs are stored in the `logs/` directory:
 ## Docker Commands
 
 ```bash
-# Start services
-docker-compose up -d
+# Start Redis
+docker-compose up -d redis
 
-# Stop services
+# Stop Redis
 docker-compose down
 
-# View logs
-docker-compose logs -f postgres
+# View Redis logs
 docker-compose logs -f redis
 
-# Restart services
-docker-compose restart
+# Restart Redis
+docker-compose restart redis
 ```
 
 ## Next Steps

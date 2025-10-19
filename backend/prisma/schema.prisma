@@ -35,6 +35,7 @@ model Article {
   id              String       @id @default(uuid())
   sourceId        String
   title           String
+  summary         String?      @db.Text
   content         String       @db.Text
   url             String       @unique
   author          String?

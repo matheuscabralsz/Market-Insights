@@ -1,11 +1,13 @@
 """
 FXStreet News Crawler
-Fetches articles from FXStreet RSS feed and saves them as markdown files
+Fetches articles from FXStreet RSS feed and outputs them as JSON
 """
 
 import asyncio
+import json
 import os
 import re
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -16,73 +18,78 @@ import html2text
 
 
 async def crawl_fxstreet_news(max_articles=10):
-    """Crawl FXStreet news from RSS feed and save articles as markdown"""
+    """Crawl FXStreet news from RSS feed and return articles as list"""
 
-    print("=" * 60)
-    print("FXStreet News Crawler (via RSS)")
-    print("=" * 60)
+    print("=" * 60, file=sys.stderr)
+    print("FXStreet News Crawler (via RSS)", file=sys.stderr)
+    print("=" * 60, file=sys.stderr)
+
+    articles = []  # Store scraped articles
 
     # Step 1: Fetch and parse RSS feed
-    print("\n[1/3] Fetching RSS feed...")
+    print("\n[1/3] Fetching RSS feed...", file=sys.stderr)
     rss_url = "https://www.fxstreet.com/rss/news"
 
     try:
         feed = feedparser.parse(rss_url)
-        print(f"✓ RSS feed loaded successfully")
-        print(f"  Feed title: {feed.feed.get('title', 'Unknown')}")
+        print(f"✓ RSS feed loaded successfully", file=sys.stderr)
+        print(f"  Feed title: {feed.feed.get('title', 'Unknown')}", file=sys.stderr)
     except Exception as e:
-        print(f"✗ Error loading RSS feed: {e}")
-        return
+        print(f"✗ Error loading RSS feed: {e}", file=sys.stderr)
+        return articles
 
     # Step 2: Extract article URLs from feed
-    print(f"\n[2/3] Extracting articles from feed...")
+    print(f"\n[2/3] Extracting articles from feed...", file=sys.stderr)
 
     if not feed.entries:
-        print("✗ No articles found in RSS feed")
-        return
+        print("✗ No articles found in RSS feed", file=sys.stderr)
+        return articles
 
-    print(f"✓ Found {len(feed.entries)} articles in feed")
+    print(f"✓ Found {len(feed.entries)} articles in feed", file=sys.stderr)
 
     # Limit to max_articles
     articles_to_scrape = feed.entries[:max_articles]
-    print(f"  Will scrape {len(articles_to_scrape)} articles")
+    print(f"  Will scrape {len(articles_to_scrape)} articles", file=sys.stderr)
 
     # Step 3: Scrape each article
-    print(f"\n[3/3] Scraping articles...")
+    print(f"\n[3/3] Scraping articles...", file=sys.stderr)
 
-    # Initialize crawler
-    async with AsyncWebCrawler(headless=True) as crawler:
+    # Initialize crawler (verbose=False to prevent stdout pollution)
+    async with AsyncWebCrawler(headless=True, verbose=False) as crawler:
         for i, entry in enumerate(articles_to_scrape, 1):
             url = entry.get('link', '')
             title = entry.get('title', 'Untitled')
 
             if not url:
-                print(f"  [{i}/{len(articles_to_scrape)}] ✗ No URL for: {title}")
+                print(f"  [{i}/{len(articles_to_scrape)}] ✗ No URL for: {title}", file=sys.stderr)
                 continue
 
-            print(f"  [{i}/{len(articles_to_scrape)}] {title[:50]}...")
+            print(f"  [{i}/{len(articles_to_scrape)}] {title[:50]}...", file=sys.stderr)
 
             try:
-                await scrape_article(crawler, url, title, entry)
-                print(f"    ✓ Saved")
+                article_data = await scrape_article(crawler, url, title, entry)
+                if article_data:
+                    articles.append(article_data)
+                    print(f"    ✓ Scraped", file=sys.stderr)
                 # Polite delay between requests to avoid rate limits
                 if i < len(articles_to_scrape):  # Don't wait after last article
-                    print(f"    ⏱ Waiting 10 seconds before next article...")
+                    print(f"    ⏱ Waiting 10 seconds before next article...", file=sys.stderr)
                     await asyncio.sleep(10)
             except Exception as e:
-                print(f"    ✗ Error: {e}")
+                print(f"    ✗ Error: {e}", file=sys.stderr)
                 # Still wait on error to avoid hammering the server
                 if i < len(articles_to_scrape):
                     await asyncio.sleep(10)
 
-    print("\n" + "=" * 60)
-    print(f"✓ Crawling complete! Scraped {len(articles_to_scrape)} articles")
-    print(f"Check the 'articles' folder for markdown files")
-    print("=" * 60)
+    print("\n" + "=" * 60, file=sys.stderr)
+    print(f"✓ Crawling complete! Scraped {len(articles)} articles", file=sys.stderr)
+    print("=" * 60, file=sys.stderr)
+
+    return articles
 
 
 async def scrape_article(crawler, url, rss_title=None, rss_entry=None):
-    """Scrape individual article and save as markdown"""
+    """Scrape individual article and return as dictionary"""
 
     # Fetch article page
     result = await crawler.arun(
@@ -135,7 +142,9 @@ async def scrape_article(crawler, url, rss_title=None, rss_entry=None):
     # Get summary from RSS if available
     summary = None
     if rss_entry and 'summary' in rss_entry:
-        summary = rss_entry.get('summary', '')
+        summary_html = rss_entry.get('summary', '')
+        # Clean HTML from summary
+        summary = BeautifulSoup(summary_html, 'html.parser').get_text().strip()
 
     # Convert to markdown
     h = html2text.HTML2Text()
@@ -154,9 +163,7 @@ async def scrape_article(crawler, url, rss_title=None, rss_entry=None):
     content += f"**Source:** {url}\n\n"
 
     if summary:
-        # Clean HTML from summary
-        summary_clean = BeautifulSoup(summary, 'html.parser').get_text()
-        content += f"**Summary:** {summary_clean}\n\n"
+        content += f"**Summary:** {summary}\n\n"
 
     content += "---\n\n"
 
@@ -170,37 +177,19 @@ async def scrape_article(crawler, url, rss_title=None, rss_entry=None):
         if paragraphs:
             content += "\n\n".join([p.get_text().strip() for p in paragraphs[:10]])
 
-    # Save to file
-    save_article(title, content)
-
-
-def save_article(title, content):
-    """Save article as markdown file"""
-
-    # Create articles directory (already created, but ensure it exists)
-    output_dir = Path(__file__).parent.parent / 'articles'
-    output_dir.mkdir(exist_ok=True)
-
-    # Generate filename
-    timestamp = datetime.now().strftime('%Y-%m-%d_%H%M%S')
-
-    # Clean title for filename
-    safe_title = re.sub(r'[^\w\s-]', '', title)  # Remove special chars
-    safe_title = re.sub(r'[\s]+', '-', safe_title)  # Replace spaces with hyphens
-    safe_title = safe_title[:50]  # Limit length
-    safe_title = safe_title.strip('-')  # Remove leading/trailing hyphens
-
-    filename = f"{timestamp}_{safe_title}.md"
-    filepath = output_dir / filename
-
-    # Write to file
-    with open(filepath, 'w', encoding='utf-8') as f:
-        f.write(content)
+    # Return article data as dictionary
+    return {
+        "title": title,
+        "summary": summary,
+        "content": content,
+        "url": url,
+        "author": author,
+        "publishedAt": publish_date,  # Will be parsed on backend
+    }
 
 
 async def main():
-    """Main entry point"""
-    import sys
+    """Main entry point - outputs JSON to stdout"""
 
     # Check if user provided a limit argument
     max_articles = 10  # Default
@@ -208,9 +197,12 @@ async def main():
         try:
             max_articles = int(sys.argv[1])
         except ValueError:
-            print(f"Invalid argument: {sys.argv[1]}. Using default: 10")
+            print(f"Invalid argument: {sys.argv[1]}. Using default: 10", file=sys.stderr)
 
-    await crawl_fxstreet_news(max_articles=max_articles)
+    articles = await crawl_fxstreet_news(max_articles=max_articles)
+
+    # Output JSON to stdout (Node.js will capture this)
+    print(json.dumps(articles, indent=2))
 
 
 if __name__ == "__main__":

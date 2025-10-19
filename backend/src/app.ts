@@ -6,6 +6,7 @@ import { errorHandler } from './middleware/errorHandler';
 import logger from './config/logger';
 import prisma from './config/database';
 import redis from './config/redis';
+import { crawlerWorker } from './jobs/crawlerJob';
 
 // Load environment variables
 dotenv.config();
@@ -42,6 +43,7 @@ app.use(errorHandler);
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   logger.info('SIGTERM signal received: closing HTTP server');
+  await crawlerWorker.close();
   await prisma.$disconnect();
   await redis.quit();
   process.exit(0);
