@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96f6b534-c40d-4056-9fe5-1d623da84bca" name="Changes" comment="Add initial project documentation and implementation plan" />
+    <list default="true" id="96f6b534-c40d-4056-9fe5-1d623da84bca" name="Changes" comment="Add IntelliJ IDEA project configuration files for initial setup">
+      <change afterPath="$PROJECT_DIR$/.idea/git_toolbox_prj.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/page.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -34,7 +38,11 @@
                 <list>
                   <RecentBranch>
                     <option name="branchName" value="main" />
-                    <option name="lastUsedInstant" value="1760843919" />
+                    <option name="lastUsedInstant" value="1760844425" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="feature/frontend-ui" />
+                    <option name="lastUsedInstant" value="1760844405" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="feature/initial-docs" />
@@ -73,6 +81,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
     "last_opened_file_path": "//wsl.localhost/Ubuntu/home/mack/my_workspace/tradingapp",
@@ -106,6 +115,7 @@
       <workItem from="1760194675694" duration="8135000" />
       <workItem from="1760840683561" duration="3055000" />
       <workItem from="1760843892991" duration="385000" />
+      <workItem from="1760844290892" duration="837000" />
     </task>
     <task id="LOCAL-00001" summary="Add initial investment advisor dashboard and RAG system components">
       <option name="closed" value="true" />
@@ -139,7 +149,15 @@
       <option name="project" value="LOCAL" />
       <updated>1760208400435</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Add IntelliJ IDEA project configuration files for initial setup">
+      <option name="closed" value="true" />
+      <created>1760844400239</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1760844400239</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -150,6 +168,7 @@
     <MESSAGE value="Add initial IntelliJ IDEA project configuration files" />
     <MESSAGE value="Add initial project idea documentation" />
     <MESSAGE value="Add initial project documentation and implementation plan" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add initial project documentation and implementation plan" />
+    <MESSAGE value="Add IntelliJ IDEA project configuration files for initial setup" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add IntelliJ IDEA project configuration files for initial setup" />
   </component>
 </project>

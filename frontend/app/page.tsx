@@ -1,14 +1,21 @@
+'use client';
+
+import { useState } from 'react';
 import { StatCard } from '@/components/ui/StatCard';
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { CategoryFilter } from '@/components/ui/CategoryFilter';
 
 export default function Dashboard() {
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
   // Mock data - will be replaced with real data later
   const mockOpportunities = [
     {
       id: 1,
       asset: 'AAPL',
       type: 'Stock',
+      category: 'US Stocks',
       confidence: 85,
       sources: 4,
       prediction: 'Bullish',
@@ -19,6 +26,7 @@ export default function Dashboard() {
       id: 2,
       asset: 'BTC',
       type: 'Crypto',
+      category: 'Cryptocurrencies',
       confidence: 92,
       sources: 5,
       prediction: 'Bullish',
@@ -29,13 +37,74 @@ export default function Dashboard() {
       id: 3,
       asset: 'TSLA',
       type: 'Stock',
+      category: 'US Stocks',
       confidence: 78,
       sources: 3,
       prediction: 'Bearish',
       timeframe: '2-4 weeks',
       lastUpdated: '1 day ago',
     },
+    {
+      id: 4,
+      asset: 'EURUSD',
+      type: 'Forex',
+      category: 'Forex',
+      confidence: 88,
+      sources: 4,
+      prediction: 'Bullish',
+      timeframe: '1 week',
+      lastUpdated: '5 hours ago',
+    },
+    {
+      id: 5,
+      asset: 'XAUUSD',
+      type: 'Forex',
+      category: 'Forex',
+      confidence: 91,
+      sources: 5,
+      prediction: 'Bullish',
+      timeframe: '2-3 weeks',
+      lastUpdated: '3 hours ago',
+    },
+    {
+      id: 6,
+      asset: 'PETR4',
+      type: 'Stock',
+      category: 'BR Stocks',
+      confidence: 76,
+      sources: 3,
+      prediction: 'Bearish',
+      timeframe: '1 month',
+      lastUpdated: '8 hours ago',
+    },
+    {
+      id: 7,
+      asset: 'VALE3',
+      type: 'Stock',
+      category: 'BR Stocks',
+      confidence: 82,
+      sources: 4,
+      prediction: 'Bullish',
+      timeframe: '2-4 weeks',
+      lastUpdated: '6 hours ago',
+    },
+    {
+      id: 8,
+      asset: 'ETH',
+      type: 'Crypto',
+      category: 'Cryptocurrencies',
+      confidence: 87,
+      sources: 4,
+      prediction: 'Bullish',
+      timeframe: '1-2 weeks',
+      lastUpdated: '2 hours ago',
+    },
   ];
+
+  // Filter opportunities based on selected categories
+  const filteredOpportunities = selectedCategories.length === 0
+    ? mockOpportunities
+    : mockOpportunities.filter(opp => selectedCategories.includes(opp.category));
 
   const mockConflicts = [
     {
@@ -128,33 +197,48 @@ export default function Dashboard() {
               }
             />
             <CardBody className="p-0">
+              {/* Category Filter */}
+              <div className="px-6 pt-4 pb-2">
+                <CategoryFilter
+                  selectedCategories={selectedCategories}
+                  onCategoryChange={setSelectedCategories}
+                  opportunities={mockOpportunities}
+                />
+              </div>
+
               <div className="divide-y divide-gray-700">
-                {mockOpportunities.map((opp) => (
-                  <div key={opp.id} className="px-6 py-4 hover:bg-gray-700/50 transition-colors cursor-pointer">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center space-x-3">
-                        <span className="text-lg font-semibold text-white">{opp.asset}</span>
-                        <Badge variant="neutral" size="sm">{opp.type}</Badge>
-                        <Badge
-                          variant={opp.prediction === 'Bullish' ? 'success' : 'danger'}
-                          size="sm"
-                        >
-                          {opp.prediction}
-                        </Badge>
+                {filteredOpportunities.length > 0 ? (
+                  filteredOpportunities.map((opp) => (
+                    <div key={opp.id} className="px-6 py-4 hover:bg-gray-700/50 transition-colors cursor-pointer">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center space-x-3">
+                          <span className="text-lg font-semibold text-white">{opp.asset}</span>
+                          <Badge variant="neutral" size="sm">{opp.category}</Badge>
+                          <Badge
+                            variant={opp.prediction === 'Bullish' ? 'success' : 'danger'}
+                            size="sm"
+                          >
+                            {opp.prediction}
+                          </Badge>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-sm font-medium text-white">{opp.confidence}%</div>
+                          <div className="text-xs text-gray-400">Confidence</div>
+                        </div>
                       </div>
-                      <div className="text-right">
-                        <div className="text-sm font-medium text-white">{opp.confidence}%</div>
-                        <div className="text-xs text-gray-400">Confidence</div>
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="text-gray-400">
+                          <span className="text-blue-400">{opp.sources} sources</span> • {opp.timeframe}
+                        </div>
+                        <div className="text-gray-500 text-xs">{opp.lastUpdated}</div>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="text-gray-400">
-                        <span className="text-blue-400">{opp.sources} sources</span> • {opp.timeframe}
-                      </div>
-                      <div className="text-gray-500 text-xs">{opp.lastUpdated}</div>
-                    </div>
+                  ))
+                ) : (
+                  <div className="px-6 py-8 text-center text-gray-400">
+                    No opportunities found for selected categories
                   </div>
-                ))}
+                )}
               </div>
             </CardBody>
           </Card>

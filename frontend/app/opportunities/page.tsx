@@ -140,7 +140,7 @@ export default function Opportunities() {
           <span className="text-sm text-gray-400">Sort by:</span>
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
+            onChange={(e) => setSortBy(e.target.value as 'confidence' | 'sources' | 'recent')}
             className="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="confidence">Confidence</option>

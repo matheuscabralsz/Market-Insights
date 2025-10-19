@@ -68,7 +68,7 @@ export function AccuracyChart({ data }: AccuracyChartProps) {
         },
         ticks: {
           color: '#9CA3AF',
-          callback: (value: any) => value + '%',
+          callback: (value: number | string) => value + '%',
         },
       },
       x: {
