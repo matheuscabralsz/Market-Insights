@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96f6b534-c40d-4056-9fe5-1d623da84bca" name="Changes" comment="Remove detailed implementation plan and Phase 1 documentation from the repository">
+    <list default="true" id="96f6b534-c40d-4056-9fe5-1d623da84bca" name="Changes" comment="Update `.gitignore` to include IntelliJ IDEA directory and adjust workspace settings">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -171,7 +172,15 @@
       <option name="project" value="LOCAL" />
       <updated>1760846000623</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Update `.gitignore` to include IntelliJ IDEA directory and adjust workspace settings">
+      <option name="closed" value="true" />
+      <created>1760846032627</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1760846032627</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -186,6 +195,7 @@
     <MESSAGE value="Integrate category filtering into the opportunities dashboard:&#10;&#10;- Added `CategoryFilter` component to allow filtering opportunities by categories.&#10;- Updated `Dashboard` to use `CategoryFilter` and show filtered opportunities dynamically.&#10;- Enhanced `Badge` component with a `className` prop for more customization.&#10;- Refactored sorting and type annotations in opportunities page.&#10;- Adjusted IntelliJ IDEA configuration files for frontend setup." />
     <MESSAGE value="Update IntelliJ IDEA configuration files: adjust settings and branch references for recent frontend updates" />
     <MESSAGE value="Remove detailed implementation plan and Phase 1 documentation from the repository" />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove detailed implementation plan and Phase 1 documentation from the repository" />
+    <MESSAGE value="Update `.gitignore` to include IntelliJ IDEA directory and adjust workspace settings" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update `.gitignore` to include IntelliJ IDEA directory and adjust workspace settings" />
   </component>
 </project>

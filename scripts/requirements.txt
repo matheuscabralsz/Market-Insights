@@ -1,0 +1,5 @@
+crawl4ai
+beautifulsoup4
+html2text
+lxml
+feedparser

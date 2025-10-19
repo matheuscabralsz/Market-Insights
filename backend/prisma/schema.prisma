@@ -1,0 +1,187 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// News/Forecast sources (e.g., Bloomberg, Reuters, FXStreet)
+model Source {
+  id               String            @id @default(uuid())
+  name             String            @unique
+  url              String
+  type             String            // "news", "forecast", "analyst", etc.
+  isActive         Boolean           @default(true)
+  scrapingConfig   Json?             // Custom scraping configuration
+  lastScrapedAt    DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  articles         Article[]
+  predictions      Prediction[]
+  accuracyRecords  SourceAccuracy[]
+  userWeights      UserSourceWeight[]
+
+  @@index([isActive])
+}
+
+// Scraped articles/content
+model Article {
+  id              String       @id @default(uuid())
+  sourceId        String
+  title           String
+  content         String       @db.Text
+  url             String       @unique
+  author          String?
+  publishedAt     DateTime
+  scrapedAt       DateTime     @default(now())
+  sentiment       Float?       // -1 to 1
+  categories      String[]     // ["forex", "stocks", "crypto"]
+
+  source          Source       @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  predictions     Prediction[]
+
+  @@index([sourceId])
+  @@index([publishedAt])
+  @@index([categories])
+}
+
+// Extracted predictions/forecasts from articles
+model Prediction {
+  id                String              @id @default(uuid())
+  articleId         String
+  sourceId          String
+  asset             String              // "EUR/USD", "AAPL", "BTC", etc.
+  assetType         String              // "forex", "stock", "crypto", "commodity"
+  direction         String              // "bullish", "bearish", "neutral"
+  targetPrice       Float?
+  currentPrice      Float?
+  confidence        Float               // 0-1
+  timeframe         String?             // "short", "medium", "long"
+  reasoning         String?             @db.Text
+  predictedAt       DateTime            @default(now())
+  targetDate        DateTime?
+
+  // Outcome tracking
+  outcome           String?             // "success", "failure", "pending"
+  actualPrice       Float?
+  evaluatedAt       DateTime?
+
+  article           Article             @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  source            Source              @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  correlations      Correlation[]       @relation("PredictionA")
+  correlatedWith    Correlation[]       @relation("PredictionB")
+  alerts            Alert[]
+
+  @@index([asset])
+  @@index([assetType])
+  @@index([predictedAt])
+  @@index([outcome])
+}
+
+// Correlation between predictions from different sources
+model Correlation {
+  id              String      @id @default(uuid())
+  predictionAId   String
+  predictionBId   String
+  similarityScore Float       // 0-1
+  detectedAt      DateTime    @default(now())
+
+  predictionA     Prediction  @relation("PredictionA", fields: [predictionAId], references: [id], onDelete: Cascade)
+  predictionB     Prediction  @relation("PredictionB", fields: [predictionBId], references: [id], onDelete: Cascade)
+
+  @@unique([predictionAId, predictionBId])
+  @@index([similarityScore])
+}
+
+// Historical accuracy tracking for sources
+model SourceAccuracy {
+  id                    String    @id @default(uuid())
+  sourceId              String
+  period                String    // "daily", "weekly", "monthly"
+  startDate             DateTime
+  endDate               DateTime
+  totalPredictions      Int
+  successfulPredictions Int
+  accuracyRate          Float     // 0-1
+  calculatedAt          DateTime  @default(now())
+
+  source                Source    @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceId, period, startDate])
+  @@index([sourceId, period])
+}
+
+// User accounts
+model User {
+  id                String             @id @default(uuid())
+  email             String             @unique
+  name              String?
+  passwordHash      String
+  isActive          Boolean            @default(true)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  alerts            Alert[]
+  sourceWeights     UserSourceWeight[]
+  preferences       UserPreference?
+
+  @@index([email])
+}
+
+// User's custom source credibility weights
+model UserSourceWeight {
+  id        String   @id @default(uuid())
+  userId    String
+  sourceId  String
+  weight    Float    // 0-1, user's trust level for this source
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  source    Source   @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, sourceId])
+  @@index([userId])
+}
+
+// User notification preferences
+model UserPreference {
+  id                      String   @id @default(uuid())
+  userId                  String   @unique
+  minConfidenceThreshold  Float    @default(0.8)  // Minimum confidence for alerts
+  minSourceCount          Int      @default(3)    // Minimum sources for correlation alerts
+  enablePushNotifications Boolean  @default(true)
+  enableEmailNotifications Boolean @default(false)
+  assetTypes              String[] // ["forex", "stocks", "crypto"]
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Alerts/Notifications
+model Alert {
+  id              String    @id @default(uuid())
+  userId          String
+  predictionId    String?
+  type            String    // "high_confidence", "correlation", "conflict"
+  title           String
+  message         String    @db.Text
+  priority        String    // "low", "medium", "high"
+  isRead          Boolean   @default(false)
+  isSent          Boolean   @default(false)
+  sentAt          DateTime?
+  createdAt       DateTime  @default(now())
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prediction      Prediction? @relation(fields: [predictionId], references: [id], onDelete: SetNull)
+
+  @@index([userId, isRead])
+  @@index([createdAt])
+}
