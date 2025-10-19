@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="96f6b534-c40d-4056-9fe5-1d623da84bca" name="Changes" comment="Add initial project documentation and implementation plan" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="feature/frontend-ui" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;matheuscabralsz&quot;
+  }
+}</component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1760843919" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="feature/initial-docs" />
+                    <option name="lastUsedInstant" value="1760194082" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="feature/claude-code-generic-prompt" />
+                    <option name="lastUsedInstant" value="1760156702" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:matheuscabralsz/tradingapp.git&quot;,
+    &quot;accountId&quot;: &quot;c3115129-2149-4525-b6e0-be3b519c883c&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="33se3MY7SAbLBwRy2LnkFZJgHLT" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "//wsl.localhost/Ubuntu/home/mack/my_workspace/tradingapp",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "advanced.settings",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-WS-252.26830.93" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="96f6b534-c40d-4056-9fe5-1d623da84bca" name="Changes" comment="" />
+      <created>1760110006960</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1760110006960</updated>
+      <workItem from="1760110008436" duration="1503000" />
+      <workItem from="1760148232142" duration="1259000" />
+      <workItem from="1760193984242" duration="654000" />
+      <workItem from="1760194675694" duration="8135000" />
+      <workItem from="1760840683561" duration="3055000" />
+      <workItem from="1760843892991" duration="385000" />
+    </task>
+    <task id="LOCAL-00001" summary="Add initial investment advisor dashboard and RAG system components">
+      <option name="closed" value="true" />
+      <created>1760194024022</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1760194024022</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Add initial IntelliJ IDEA project configuration files">
+      <option name="closed" value="true" />
+      <created>1760194554566</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1760194554566</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Add initial project idea documentation">
+      <option name="closed" value="true" />
+      <created>1760194562828</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1760194562828</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Add initial project documentation and implementation plan">
+      <option name="closed" value="true" />
+      <created>1760208400435</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1760208400435</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Add initial investment advisor dashboard and RAG system components" />
+    <MESSAGE value="Add initial IntelliJ IDEA project configuration files" />
+    <MESSAGE value="Add initial project idea documentation" />
+    <MESSAGE value="Add initial project documentation and implementation plan" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add initial project documentation and implementation plan" />
+  </component>
+</project>
