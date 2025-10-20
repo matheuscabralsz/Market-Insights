@@ -30,6 +30,7 @@ async function getOrCreateSource(sourceKey: string) {
     throw new Error(`Unknown source: ${sourceKey}`);
   }
 
+  // TODO: is name the best unique identifier?
   // Try to find existing source
   let source = await prisma.source.findUnique({
     where: { name: config.name },
