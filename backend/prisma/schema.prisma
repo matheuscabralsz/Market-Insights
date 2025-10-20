@@ -34,6 +34,7 @@ model Source {
 model Article {
   id              String       @id @default(uuid())
   sourceId        String
+  guid            String?      @unique  // RSS feed GUID - unique identifier from source
   title           String
   summary         String?      @db.Text
   content         String       @db.Text

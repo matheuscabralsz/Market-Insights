@@ -3,6 +3,7 @@ import logger from '../config/logger';
 import { parseISO, parse } from 'date-fns';
 
 interface ArticleData {
+  guid?: string | null;  // RSS feed GUID - unique identifier
   title: string;
   summary?: string | null;
   content: string;
@@ -30,7 +31,6 @@ async function getOrCreateSource(sourceKey: string) {
     throw new Error(`Unknown source: ${sourceKey}`);
   }
 
-  // TODO: is name the best unique identifier?
   // Try to find existing source
   let source = await prisma.source.findUnique({
     where: { name: config.name },
@@ -94,13 +94,25 @@ export async function saveArticles(sourceKey: string, articles: ArticleData[]): 
 
   for (const article of articles) {
     try {
-      // Check if article already exists by URL
-      const existing = await prisma.article.findUnique({
-        where: { url: article.url },
-      });
+      // Check if article already exists by GUID (primary) or URL (fallback)
+      let existing = null;
+
+      if (article.guid) {
+        // First, try to find by GUID (most reliable unique identifier)
+        existing = await prisma.article.findUnique({
+          where: { guid: article.guid },
+        });
+      }
+
+      if (!existing) {
+        // Fallback to URL check for articles without GUID or if GUID lookup failed
+        existing = await prisma.article.findUnique({
+          where: { url: article.url },
+        });
+      }
 
       if (existing) {
-        logger.debug(`Article already exists: ${article.url}`);
+        logger.debug(`Article already exists: ${article.guid || article.url}`);
         skippedCount++;
         continue;
       }
@@ -112,6 +124,7 @@ export async function saveArticles(sourceKey: string, articles: ArticleData[]): 
       await prisma.article.create({
         data: {
           sourceId: source.id,
+          guid: article.guid,  // Save RSS GUID
           title: article.title,
           summary: article.summary,
           content: article.content,

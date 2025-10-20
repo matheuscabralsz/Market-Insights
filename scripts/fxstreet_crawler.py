@@ -91,6 +91,12 @@ async def crawl_fxstreet_news(max_articles=10):
 async def scrape_article(crawler, url, rss_title=None, rss_entry=None):
     """Scrape individual article and return as dictionary"""
 
+    # Extract GUID from RSS entry (unique identifier)
+    guid = None
+    if rss_entry:
+        # Try both 'id' and 'guid' fields from feedparser
+        guid = rss_entry.get('id') or rss_entry.get('guid')
+
     # Fetch article page
     result = await crawler.arun(
         url=url,
@@ -179,6 +185,7 @@ async def scrape_article(crawler, url, rss_title=None, rss_entry=None):
 
     # Return article data as dictionary
     return {
+        "guid": guid,  # RSS feed GUID - unique identifier
         "title": title,
         "summary": summary,
         "content": content,
