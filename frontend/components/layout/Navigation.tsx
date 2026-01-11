@@ -28,6 +28,12 @@ export default function Navigation() {
                 Opportunities
               </Link>
               <Link
+                href="/articles"
+                className="text-gray-300 hover:text-white inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors"
+              >
+                Articles
+              </Link>
+              <Link
                 href="/sources"
                 className="text-gray-300 hover:text-white inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors"
               >
@@ -89,6 +95,12 @@ export default function Navigation() {
               className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
             >
               Opportunities
+            </Link>
+            <Link
+              href="/articles"
+              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+            >
+              Articles
             </Link>
             <Link
               href="/sources"

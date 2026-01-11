@@ -47,7 +47,15 @@ export default function Analytics() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="relative">
+      {/* Not done yet overlay */}
+      <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-start justify-center pt-20">
+        <div className="bg-gray-800 border border-gray-700 rounded-lg px-6 py-4 shadow-xl">
+          <p className="text-xl font-semibold text-white">Not done yet</p>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white">Analytics</h1>
         <p className="mt-2 text-gray-400">
@@ -207,6 +215,7 @@ export default function Analytics() {
             </div>
           </CardBody>
         </Card>
+      </div>
       </div>
     </div>
   );

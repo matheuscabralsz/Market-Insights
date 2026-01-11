@@ -77,7 +77,15 @@ export default function Sources() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="relative">
+      {/* Not done yet overlay */}
+      <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-start justify-center pt-20">
+        <div className="bg-gray-800 border border-gray-700 rounded-lg px-6 py-4 shadow-xl">
+          <p className="text-xl font-semibold text-white">Not done yet</p>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8 flex justify-between items-start">
         <div>
           <h1 className="text-3xl font-bold text-white">Source Management</h1>
@@ -231,10 +239,11 @@ export default function Sources() {
           </div>
         </CardBody>
       </Card>
+      </div>
 
       {/* Add Source Modal (simplified) */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4">
           <Card className="max-w-2xl w-full">
             <CardHeader
               title="Add New Source"
